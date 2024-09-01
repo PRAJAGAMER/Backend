@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  Pending
+  Verifying
+  Accepted
+  Rejected
+}
+
+model User {
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
+  email      String      @unique
+  password   String
+  status     Role        @default(Pending)
+  createdAt  DateTime    @default(now())
+  updateAt   DateTime    @updatedAt
+  deleteAt   DateTime?
+  Regist     Regist?
+  Profile    Profile?
+  University University?
+}
+
+model Regist {
+  id               Int      @id @default(autoincrement())
+  user_id          Int      @unique
+  cv               String
+  recommend_letter String
+  score_list       String
+  portofolio       String?
+  available_space  Boolean? 
+  first_period     DateTime?
+  last_period      DateTime?
+  createdAt        DateTime @default(now())
+  updateAt         DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id])
+}
+
+model Profile {
+  id                Int      @id @default(autoincrement())
+  user_id           Int      @unique
+  telp_user         String
+  nik               String   @unique
+  photo             String
+  place_birth       String
+  birth_date        String
+  province_domicile String
+  city_domicile     String
+  address_domicile  String
+  province_ktp      String
+  city_ktp          String
+  address_ktp       String
+  createdAt         DateTime @default(now())
+  updateAt          DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id])
+}
+
+model University {
+  id               Int      @id @default(autoincrement())
+  user_id          Int      @unique
+  univ_name        String
+  nim              String   @unique
+  major            String
+  ipk              Float
+  semester         String
+  name_supervisor  String
+  telp_supervisor  String
+  email_supervisor String
+  createdAt        DateTime @default(now())
+  updateAt         DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id])
+}
+
+model Admin {
+  id          Int       @id @default(autoincrement())
+  admin_name  String
+  nip         String    @unique
+  telp_admin  String
+  email       String    @unique
+  password    String
+  role        String    @default("admin")
+  createdAt   DateTime  @default(now())
+  updateAt    DateTime  @updatedAt
+}
+
+model Vacancies {
+  id               Int     @id @default(autoincrement())
+  name_banner      String
+  banner           String
+}
