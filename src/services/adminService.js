@@ -10,6 +10,21 @@ const prisma = new PrismaClient();
 //     throw new Error('Error saat mengambil data semua user');
 //   }
 // };
+
+// Fungsi untuk mengambil semua data admin
+const getAllAdmins = async () => {
+  return await prisma.admin.findMany();
+};
+
+// Fungsi untuk menghapus admin berdasarkan admin_id
+const deleteAdmin = async (id) => {
+  return await prisma.admin.delete({
+    where: {
+      id: parseInt(id), 
+    },
+  });
+};
+
 const getAllUsers = async () => {
   try {
     const users = await prisma.user.findMany({
@@ -136,12 +151,34 @@ const countRejectedApplicants = async () => {
   }
 };
 
+const getApplicantsList = async () => {
+  return await prisma.regist.findMany({
+    include: {
+      user: {
+        select: {
+          name: true,          // Mengambil nama dari model User
+          status: true,        // Mengambil status dari model User
+          createdAt: true,     // Tanggal pendaftaran dari model User
+          University: {
+            select: {
+              univ_name: true, // Mengambil nama universitas dari model University
+            }
+          }
+        }
+      }
+    }
+  });
+};
+
 module.exports = {
+  getAllAdmins,
+  deleteAdmin,
   getAllUsers,
   getAllUsers2,
   updateUserStatus,
   countAllApplicants,
   countAcceptedApplicants,
   countRejectedApplicants,
+  getApplicantsList,
   getUserPhoneNumber,
 };
