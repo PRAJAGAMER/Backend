@@ -170,6 +170,20 @@ const getApplicantsList = async () => {
   });
 };
 
+// Service untuk update banner URL berdasarkan name_banner
+const updateBannerUrlByNameBanner = async (nameBanner, newBannerUrl) => {
+  try {
+    const updatedVacancy = await prisma.vacancies.updateMany({
+      where: { name_banner: nameBanner },
+      data: { banner: newBannerUrl },
+    });
+    return updatedVacancy;
+  } catch (error) {
+    throw new Error('Error updating banner URL');
+  }
+};
+
+
 module.exports = {
   getAllAdmins,
   deleteAdmin,
@@ -181,4 +195,5 @@ module.exports = {
   countRejectedApplicants,
   getApplicantsList,
   getUserPhoneNumber,
+  updateBannerUrlByNameBanner,
 };

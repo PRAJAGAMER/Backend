@@ -31,4 +31,7 @@ router.put('/users/status2', adminController.updateUserStatus2);
 
 router.get('/admin/dashboard', adminController.getApplicantsData);
 
+// Route untuk upload banner
+router.put('/banner', adminController.updateBannerByNameBanner);
+
 module.exports = router;

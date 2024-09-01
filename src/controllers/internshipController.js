@@ -108,7 +108,25 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage: storage });
+
+const fileFilter = (req, file, cb) => {
+  if (file.fieldname === 'cv' || file.fieldname === 'recommend_letter' || file.fieldname === 'portofolio') {
+    if (file.mimetype === 'application/pdf') {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type. Only pdf files are allowed.'), false);
+    }
+  } else {
+    cb(new Error('Invalid field name.'), false);
+  }
+};
+
+// Inisialisasi Multer
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // Batas ukuran file 5MB
+  fileFilter: fileFilter
+});
 
 exports.applyForInternship = [
   upload.fields([

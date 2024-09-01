@@ -7,11 +7,17 @@ const profileRoutes = require('./src/routes/profileRoute');
 const internshipRoute = require('./src/routes/internshipRoute');
 const adminRoute = require('./src/routes/adminRoute');
 const exportRoute = require('./src/routes/exportRoute');
+const cors = require('cors');
+const corsOptions = {
+  credential: true,
+  origin: ['http://localhost:5173']
+}
 
 // Middleware
 app.use(express.json()); // Parse JSON bodies
 
 // Routes
+app.use(cors(corsOptions));
 app.use('/api', authRoutes);
 app.use('/api', profileRoutes);
 app.use('/api', internshipRoute);

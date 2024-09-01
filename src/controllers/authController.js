@@ -44,10 +44,29 @@ const storage = multer.diskStorage({
   },
 });
 
+const fileFilter = (req, file, cb) => {
+  if (file.fieldname === 'photo') {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type for photo. Only jpg and png are allowed.'), false);
+    }
+  } else if (file.fieldname === 'cv' || file.fieldname === 'score_list') {
+    if (file.mimetype === 'application/pdf') {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type. Only pdf files are allowed.'), false);
+    }
+  } else {
+    cb(new Error('Invalid field name.'), false);
+  }
+};
+
 // Inisialisasi Multer
 const upload = multer({
   storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // Batas ukuran file 5MB
+  fileFilter: fileFilter
 });
 
 // Middleware upload untuk file
