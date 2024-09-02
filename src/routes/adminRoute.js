@@ -3,36 +3,28 @@ const router = express.Router();
 const adminController = require('../controllers/adminController');
 const adminMiddleware = require('../middleware/adminMiddleware');
 
-// Rute untuk mendapatkan semua data admin
+// Route to get all admin data
 router.get('/admins', adminMiddleware, adminController.getAllAdmins);
 
-// Rute untuk menghapus admin berdasarkan admin_id
+// Route to delete admin based on admin id
 router.delete('/admin/:id', adminMiddleware, adminController.deleteAdmin);
 
-// Route untuk menampilkan semua user
+// Route to display all users
 router.get('/users', adminMiddleware, adminController.getAllUsers);
 
-// Route untuk mengubah status user
+// Route to change user status
 router.put('/users/status',adminMiddleware,  adminController.updateUserStatus);
 
-// Route untuk menampilkan semua user
+// Route to display all users2
 router.get('/users2',adminMiddleware,  adminController.getAllUsers2);
 
-// Route untuk mengubah status user
+// Route to change user status2
 router.put('/users/status2',adminMiddleware,  adminController.updateUserStatus2);
 
-// // Route untuk mendapatkan jumlah pendaftar secara keseluruhan
-// router.get('/users/count/total', adminController.getTotalApplicants);
-
-// // Route untuk mendapatkan jumlah pendaftar yang diterima (accepted)
-// router.get('/users/count/accepted', adminController.getAcceptedApplicants);
-
-// // Route untuk mendapatkan jumlah pendaftar yang ditolak (rejected)
-// router.get('/users/count/rejected', adminController.getRejectedApplicants);
-
+// Route to display all registrant data
 router.get('/admin/dashboard',adminMiddleware,  adminController.getApplicantsData);
 
-// Route untuk upload banner
+// Route to upload banner
 router.put('/banner',adminMiddleware,  adminController.updateBannerByNameBanner);
 
 module.exports = router;

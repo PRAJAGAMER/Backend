@@ -9,7 +9,7 @@ exports.getProfile = async (userId) => {
   try {
     return await prisma.user.findUnique({
       where: {
-        id: userId, // Gunakan userId untuk pencarian
+        id: userId, 
       },
       include: {
         Regist: true,
@@ -19,7 +19,7 @@ exports.getProfile = async (userId) => {
     });
   } catch (error) {
     console.error('Error fetching profile:', error);
-    throw error; // Rethrow error untuk ditangani oleh controller
+    throw error; 
   }
 };
 

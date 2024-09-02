@@ -2,24 +2,10 @@ const authService = require('../services/authService');
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
-/*
-exports.registerUser = async (req, res) => {
-  const { name, nim, nik, password, email, telp, universitas, major, photo, cv, score_list } = req.body;
 
-  try {
-    const user = await authService.registerUser({
-      name, nim, nik, password, email, telp, universitas, major, photo, cv, score_list
-    });
-    res.status(201).json({ message: 'User registered successfully', user });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};*/// Konfigurasi penyimpanan Multer
-// Konfigurasi penyimpanan Multer
-
+// Storage Configuration Multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // Tentukan folder tujuan berdasarkan jenis file
     let uploadPath = '';
     switch (file.fieldname) {
       case 'photo':
@@ -62,42 +48,42 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Inisialisasi Multer
+// Multer Initialization
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // Batas ukuran file 5MB
+  limits: { fileSize: 5 * 1024 * 1024 }, 
   fileFilter: fileFilter
 });
 
-// Middleware upload untuk file
+// Middleware upload for files
 const uploadFields = upload.fields([
   { name: 'photo', maxCount: 1 },
   { name: 'cv', maxCount: 1 },
   { name: 'score_list', maxCount: 1 },
 ]);
 
-// Controller untuk registrasi user
+// Controller for user registration
 exports.registerUser = (req, res) => {
   uploadFields(req, res, async (err) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
 
-    // Log untuk debugging
+    // Logs for debugging
     console.log('Files:', req.files);
     console.log('Body:', req.body);
 
-    // Deklarasi variabel file
+    // File variable declaration
     const photoFile = req.files['photo'] ? req.files['photo'][0] : null;
     const cvFile = req.files['cv'] ? req.files['cv'][0] : null;
     const scoreListFile = req.files['score_list'] ? req.files['score_list'][0] : null;
 
-    // Log untuk memeriksa file yang diupload
+    // Logs to check uploaded files
     console.log('photoFile:', photoFile);
     console.log('cvFile:', cvFile);
     console.log('scoreListFile:', scoreListFile);
 
-    // Cek file yang kosong dan kirimkan pesan error yang sesuai
+    // Check for empty files and send an appropriate error message
     let missingFields = [];
     if (!photoFile) missingFields.push('photo');
     if (!cvFile) missingFields.push('cv');
@@ -136,7 +122,7 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// Register untuk admin
+// Register for admin
 exports.registerAdmin = async (req, res) => {
   const { admin_name, nip, telp_admin, email, password } = req.body;
 
@@ -148,7 +134,7 @@ exports.registerAdmin = async (req, res) => {
   }
 };
 
-// Login untuk admin
+// Login for admin
 exports.loginAdmin = async (req, res) => {
   const { email, password } = req.body;
 

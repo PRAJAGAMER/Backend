@@ -1,7 +1,7 @@
 const profileService = require('../services/profileService');
 
 const getProfile = async (req, res) => {
-  const userId = req.user.id;  // Ambil userId dari JWT yang terverifikasi
+  const userId = req.user.id;  // Retrieve the userId of the verified JWT
   try {
     const user = await profileService.getProfile(userId);
 
@@ -33,14 +33,14 @@ const getProfile = async (req, res) => {
       email_supervisor: user.University?.email_supervisor || null,
     });
   } catch (error) {
-    console.error(error); // Log error untuk debugging
+    console.error(error); 
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
 const updateProfile = async (req, res) => {
-  const userId = req.user.id;  // Ambil userId dari JWT
-  const profileData = req.body;  // Ambil semua data dari body request
+  const userId = req.user.id;  // Get userId from JWT
+  const profileData = req.body;  // Retrieve all data from the request body
 
   try {
     const result = await profileService.updateProfile(userId, profileData);

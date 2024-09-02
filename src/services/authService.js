@@ -4,12 +4,9 @@ const jwt = require('jsonwebtoken');
 const prisma = new PrismaClient();
 
 const JWT_SECRET = process.env.JWT_SECRET;
-// Controller untuk registrasi user
 exports.registerUser = async ({ name, nim, nik, password, email, telp, universitas, major, photoPath, cvPath, scoreListPath }) => {
-  // Enkripsi password
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  // Buat user baru
   return await prisma.user.create({
     data: {
       name,
@@ -56,32 +53,27 @@ exports.registerUser = async ({ name, nim, nik, password, email, telp, universit
 };
 
 exports.loginUser = async (email, password) => {
-  // Cari user berdasarkan email
   const user = await prisma.user.findUnique({ where: { email } });
 
   if (!user) {
     throw new Error('Invalid email or password');
   }
 
-  // Verifikasi status user
   if (user.status !== 'Verifying') {
     throw new Error('Your account has not been approved by admin.');
   }
 
-  // Verifikasi password
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
     throw new Error('Invalid email or password');
   }
 
-  // Buat token JWT
   const token = jwt.sign({ id: user.id, name: user.name }, JWT_SECRET, { expiresIn: '1h' });
 
   return { token, user };
 };
 
-// Fungsi untuk registrasi admin
 exports.registerAdmin = async ({ admin_name, nip, telp_admin, email, password }) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -96,7 +88,6 @@ exports.registerAdmin = async ({ admin_name, nip, telp_admin, email, password })
   });
 };
 
-// Fungsi untuk login admin
 exports.loginAdmin = async (email, password) => {
   const admin = await prisma.admin.findUnique({ where: { email } });
 

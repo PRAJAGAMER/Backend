@@ -3,17 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Menampilkan semua user
-// const getAllUsers = async (req, res) => {
-//   try {
-//     const users = await adminService.getAllUsers();
-//     res.status(200).json(users);
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-
-// Handler untuk mengambil semua data admin
+// Handler to retrieve all admin data
 const getAllAdmins = async (req, res) => {
   try {
     const admins = await adminService.getAllAdmins();
@@ -23,7 +13,7 @@ const getAllAdmins = async (req, res) => {
   }
 };
 
-// Handler untuk menghapus admin berdasarkan id
+// Handler to delete admin by id
 const deleteAdmin = async (req, res) => {
   const { id } = req.params;
 
@@ -35,6 +25,7 @@ const deleteAdmin = async (req, res) => {
   }
 };
 
+// Handler to retrieve all user data
 const getAllUsers = async (req, res) => {
   try {
     const users = await adminService.getAllUsers();
@@ -44,6 +35,7 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+// Handler to retrieve all user data 2
 const getAllUsers2 = async (req, res) => {
   try {
     const users = await adminService.getAllUsers2();
@@ -53,18 +45,7 @@ const getAllUsers2 = async (req, res) => {
   }
 };
 
-// Mengubah status user
-/*const updateUserStatus = async (req, res) => {
-  const { userId, status } = req.body;
-
-  try {
-    const updatedUser = await adminService.updateUserStatus(userId, status);
-    res.status(200).json(updatedUser);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-*/
+// Handler to update user status [verifying]
 const updateUserStatus = async (req, res) => {
   const { userId, status } = req.body;
 
@@ -85,6 +66,7 @@ const updateUserStatus = async (req, res) => {
   }
 };
 
+// Handler to update user status [Accepted]
 const updateUserStatus2 = async (req, res) => {
   const { userId, status } = req.body;
 
@@ -105,7 +87,7 @@ const updateUserStatus2 = async (req, res) => {
   }
 };
 
-// Mendapatkan jumlah total pendaftar, pendaftar yang diterima, dan pendaftar yang ditolak
+// Get the total number of applicants, accepted applicants, and rejected applicants, and retrieve all applicant data
 const getApplicantsData = async (req, res) => {
   try {
     const [totalApplicants, acceptedApplicants, rejectedApplicants, applicantsList] = await Promise.all([
@@ -129,10 +111,10 @@ const getApplicantsData = async (req, res) => {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../uploads/assets')); // Tempat penyimpanan file
+    cb(null, path.join(__dirname, '../uploads/assets')); // File Storage
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Menyimpan file dengan nama unik
+    cb(null, Date.now() + path.extname(file.originalname)); // Save files with unique names
   },
 });
 
@@ -145,35 +127,13 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Konfigurasi multer
+// Multer Configuration
 const upload = multer({ 
   storage: storage,
-  fileFilter: fileFilter, // Tambahkan fileFilter di sini
+  fileFilter: fileFilter, 
 });
 
-// Controller untuk update banner URL berdasarkan name_banner
-/*const updateBannerByNameBanner = async (req, res) => {
-  const { banner } = req.body;
-  const nameBanner = 'lowongan'; // name_banner yang ingin diperbarui
-
-  if (!banner) {
-    return res.status(400).json({ message: 'Banner URL is required' });
-  }
-
-  try {
-    const updatedVacancy = await adminService.updateBannerUrlByNameBanner(nameBanner, banner);
-    
-    if (updatedVacancy.count === 0) {
-      return res.status(404).json({ message: `No vacancies found with name_banner = ${nameBanner}` });
-    }
-
-    return res.status(200).json({ message: 'Banner updated successfully', updatedVacancy });
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-};*/
 const updateBannerByNameBanner = async (req, res) => {
-  // Gunakan middleware upload untuk menangani file upload
   upload.single('banner')(req, res, async (err) => {
     if (err) {
       return res.status(500).json({ message: err.message });
@@ -183,12 +143,11 @@ const updateBannerByNameBanner = async (req, res) => {
       return res.status(400).json({ message: 'No file uploaded' });
     }
 
-    const bannerFilePath = req.file.path; // Path file gambar yang diupload
+    const bannerFilePath = req.file.path; 
 
-    const nameBanner = 'lowongan'; // name_banner yang ingin diperbarui
+    const nameBanner = 'lowongan'; 
 
     try {
-      // Update URL banner di database
       const updatedVacancy = await adminService.updateBannerUrlByNameBanner(nameBanner, bannerFilePath);
       
       if (updatedVacancy.count === 0) {
@@ -197,7 +156,6 @@ const updateBannerByNameBanner = async (req, res) => {
 
       return res.status(200).json({ message: 'Banner updated successfully', updatedVacancy });
     } catch (error) {
-      // Hapus file jika terjadi error
       fs.unlink(bannerFilePath, (unlinkError) => {
         if (unlinkError) console.error('Failed to delete file:', unlinkError);
       });
@@ -207,37 +165,6 @@ const updateBannerByNameBanner = async (req, res) => {
   });
 };
 
-
-// // Mendapatkan jumlah pendaftar secara keseluruhan
-// const getTotalApplicants = async (req, res) => {
-//   try {
-//     const totalApplicants = await adminService.countAllApplicants();
-//     res.status(200).json({ totalApplicants });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-
-// // Mendapatkan jumlah pendaftar yang diterima (accepted)
-// const getAcceptedApplicants = async (req, res) => {
-//   try {
-//     const acceptedApplicants = await adminService.countAcceptedApplicants();
-//     res.status(200).json({ acceptedApplicants });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-
-// // Mendapatkan jumlah pendaftar yang ditolak (rejected)
-// const getRejectedApplicants = async (req, res) => {
-//   try {
-//     const rejectedApplicants = await adminService.countRejectedApplicants();
-//     res.status(200).json({ rejectedApplicants });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-
 module.exports = {
   getAllAdmins,
   deleteAdmin,
@@ -245,9 +172,6 @@ module.exports = {
   updateUserStatus,
   getAllUsers2,
   updateUserStatus2,
-  // getTotalApplicants,
-  // getAcceptedApplicants,
-  // getRejectedApplicants,
   getApplicantsData,
   updateBannerByNameBanner,
 };

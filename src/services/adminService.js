@@ -1,22 +1,12 @@
 const { PrismaClient, Role } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-// Menampilkan semua user
-// const getAllUsers = async () => {
-//   try {
-//     const users = await prisma.user.findMany();
-//     return users;
-//   } catch (error) {
-//     throw new Error('Error saat mengambil data semua user');
-//   }
-// };
-
-// Fungsi untuk mengambil semua data admin
+// Function to retrieve all admin data
 const getAllAdmins = async () => {
   return await prisma.admin.findMany();
 };
 
-// Fungsi untuk menghapus admin berdasarkan admin_id
+// Function to delete admin based on admin id
 const deleteAdmin = async (id) => {
   return await prisma.admin.delete({
     where: {
@@ -56,7 +46,7 @@ const getAllUsers = async () => {
   }
 };
 
-// Mengubah status user
+// replace user status
 const updateUserStatus = async (userId, status) => {
   try {
     const updatedUser = await prisma.user.update({
@@ -74,7 +64,7 @@ const getAllUsers2 = async () => {
     const users = await prisma.user.findMany({
       select: {
         name: true,
-        status: true, // Menampilkan status
+        status: true, 
         Profile: {
           select: {
             photo: true,
@@ -91,7 +81,7 @@ const getAllUsers2 = async () => {
             cv: true,
             portofolio: true,
             score_list: true,
-            recommend_letter: true, // Menampilkan surat rekomendasi
+            recommend_letter: true, 
           },
         },
       },
@@ -114,8 +104,7 @@ const getUserPhoneNumber = async (userId) => {
   }
 };
 
-
-// Menghitung jumlah pendaftar secara keseluruhan
+// Count the total number of registrants
 const countAllApplicants = async () => {
   try {
     const count = await prisma.user.count();
@@ -125,11 +114,11 @@ const countAllApplicants = async () => {
   }
 };
 
-// Menghitung jumlah pendaftar yang diterima (Accepted)
+// Count the number of accepted applicants (Accepted)
 const countAcceptedApplicants = async () => {
   try {
     const count = await prisma.user.count({
-      where: { status: Role.Accepted }, // Menggunakan enum Role.Accepted
+      where: { status: Role.Accepted }, 
     });
     return count;
   } catch (error) {
@@ -138,11 +127,11 @@ const countAcceptedApplicants = async () => {
   }
 };
 
-// Menghitung jumlah pendaftar yang ditolak (Rejected)
+// Count the number of rejected applicants (Rejected)
 const countRejectedApplicants = async () => {
   try {
     const count = await prisma.user.count({
-      where: { status: Role.Rejected }, // Menggunakan enum Role.Rejected
+      where: { status: Role.Rejected }, 
     });
     return count;
   } catch (error) {
@@ -156,12 +145,12 @@ const getApplicantsList = async () => {
     include: {
       user: {
         select: {
-          name: true,          // Mengambil nama dari model User
-          status: true,        // Mengambil status dari model User
-          createdAt: true,     // Tanggal pendaftaran dari model User
+          name: true,          
+          status: true,        
+          createdAt: true,     
           University: {
             select: {
-              univ_name: true, // Mengambil nama universitas dari model University
+              univ_name: true, 
             }
           }
         }
@@ -170,7 +159,7 @@ const getApplicantsList = async () => {
   });
 };
 
-// Service untuk update banner URL berdasarkan name_banner
+// Service to update banner URL based on name_banner
 const updateBannerUrlByNameBanner = async (nameBanner, newBannerUrl) => {
   try {
     const updatedVacancy = await prisma.vacancies.updateMany({
@@ -183,17 +172,16 @@ const updateBannerUrlByNameBanner = async (nameBanner, newBannerUrl) => {
   }
 };
 
-
 module.exports = {
   getAllAdmins,
   deleteAdmin,
   getAllUsers,
   getAllUsers2,
   updateUserStatus,
+  getUserPhoneNumber,
   countAllApplicants,
   countAcceptedApplicants,
   countRejectedApplicants,
   getApplicantsList,
-  getUserPhoneNumber,
   updateBannerUrlByNameBanner,
 };

@@ -1,4 +1,3 @@
-// controllers/exportController.js
 const { exportDataToExcel } = require('../services/exportService');
 
 const exportToExcel = async (req, res) => {

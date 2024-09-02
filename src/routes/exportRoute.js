@@ -1,4 +1,3 @@
-// routes/exportRoute.js
 const express = require('express');
 const { exportToExcel } = require('../controllers/exportController');
 const adminMiddleware = require('../middleware/adminMiddleware');

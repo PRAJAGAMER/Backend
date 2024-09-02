@@ -9,7 +9,7 @@ exports.getInternshipForm = async (userId) => {
       include: {
         Profile: true,
         University: true,
-        Regist: true, // Menambahkan relasi ke tabel `Regist` jika diperlukan
+        Regist: true, 
       },
     });
 
@@ -17,7 +17,7 @@ exports.getInternshipForm = async (userId) => {
       throw new Error('User not found');
     }
 
-    // Data yang akan otomatis terisi
+    // Data that will be automatically filled
     return {
       name: user.name,
       nim: user.University?.nim,
@@ -35,7 +35,6 @@ exports.getInternshipForm = async (userId) => {
   }
 };
 
-// Fungsi untuk mengajukan lamaran magang
 function deleteFile(filePath) {
   if (filePath && fs.existsSync(filePath)) {
     fs.unlinkSync(filePath);
@@ -52,7 +51,7 @@ exports.applyForInternship = async ({
   cv
 }) => {
   try {
-    // Mendapatkan data lamaran magang sebelumnya
+    // Obtain previous internship application data
     const previousData = await prisma.regist.findUnique({
       where: { user_id: userId },
       select: {
@@ -62,7 +61,7 @@ exports.applyForInternship = async ({
       }
     });
 
-    // Hapus file lama jika ada file baru yang diunggah
+    // Delete old files if new files are uploaded
     if (recommend_letter && previousData.recommend_letter !== recommend_letter) {
       deleteFile(previousData.recommend_letter);
     }
@@ -73,7 +72,7 @@ exports.applyForInternship = async ({
       deleteFile(previousData.cv);
     }
 
-    // Update data lamaran magang
+    // Update internship application data
     return await prisma.regist.update({
       where: { user_id: userId },
       data: {
