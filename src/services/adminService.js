@@ -20,22 +20,20 @@ const getAllUsers = async () => {
     const users = await prisma.user.findMany({
       select: {
         name: true,
+        email: true,
+        status: true,
+        createdAt: true,
         Profile: {
           select: {
-            photo: true,
+            telp_user: true,
+            nik: true,
           },
         },
         University: {
           select: {
             univ_name: true,
+            major: true,
             nim: true,
-          },
-        },
-        Regist: {
-          select: {
-            cv: true,
-            portofolio: true,
-            score_list: true,
           },
         },
       },
@@ -67,12 +65,14 @@ const getAllUsers2 = async () => {
         status: true, 
         Profile: {
           select: {
-            photo: true,
+            telp_user: true,
+            nik: true,
           },
         },
         University: {
           select: {
             univ_name: true,
+            major: true,
             nim: true,
           },
         },
@@ -80,8 +80,11 @@ const getAllUsers2 = async () => {
           select: {
             cv: true,
             portofolio: true,
-            score_list: true,
             recommend_letter: true, 
+            available_space: true,
+            first_period: true,
+            last_period: true,
+            updateAt: true,  // Mengambil tanggal update applyForInternship
           },
         },
       },
