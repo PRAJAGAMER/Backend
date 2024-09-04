@@ -9,7 +9,7 @@ const adminMiddleware = async (req, res, next) => {
   // Retrieve token from Authorization header
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ message: 'Token tidak tersedia' });
+    return res.status(401).json({ message: 'No token provided' });
   }
 
   const token = authHeader.split(' ')[1];
@@ -25,14 +25,14 @@ const adminMiddleware = async (req, res, next) => {
 
     // Check if admin is found
     if (!admin) {
-      return res.status(403).json({ message: 'Akses ditolak' });
+      return res.status(403).json({ message: 'Access rejected' });
     }
 
     // Store admin information in the request for use in the route handler
     req.admin = admin;
     next();
   } catch (error) {
-    return res.status(401).json({ message: 'Token tidak valid' });
+    return res.status(401).json({ message: 'No token provided' });
   }
 };
 

@@ -27,4 +27,7 @@ router.get('/admin/dashboard',adminMiddleware,  adminController.getApplicantsDat
 // Route to upload banner
 router.put('/banner',adminMiddleware,  adminController.updateBannerByNameBanner);
 
+// Route to display banner by name
+router.get('/banner', adminMiddleware, adminController.getBannerByNameBanner);
+
 module.exports = router;

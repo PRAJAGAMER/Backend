@@ -54,7 +54,15 @@ const updateUserStatus = async (req, res) => {
 
     if (status === 'Verifying') {
       const phoneNumber = await adminService.getUserPhoneNumber(userId);
-      const message = 'Selamat+kamu+diterima+magang+silahkan+login';
+      const message = 'Selamat+Pendaftaran+akun+kamu+diterima+silahkan+login+dan+lakukan+pendaftaran+magang';
+      const whatsappUrl = `https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${message}&type=phone_number&app_absent=0`;
+      
+      return res.redirect(whatsappUrl);
+    } 
+
+    if (status === 'NotVerifying') {
+      const phoneNumber = await adminService.getUserPhoneNumber(userId);
+      const message = 'Maaf+Pendaftaran+akun+anda+tidak+dapat+diverifikasi+untuk+magang';
       const whatsappUrl = `https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${message}&type=phone_number&app_absent=0`;
       
       return res.redirect(whatsappUrl);
@@ -75,9 +83,17 @@ const updateUserStatus2 = async (req, res) => {
 
     if (status === 'Accepted') {
       const phoneNumber = await adminService.getUserPhoneNumber(userId);
-      const message = 'Halo+setelah+melalui+proses+seleksi+administrasi+kamu+berhak+masuk+ke+grup+berikut+link+grupnya';
+      const message = 'Halo+setelah+melalui+proses+seleksi+administrasi+kamu+diterima+magang+di+DISDUKCAPIL+Kota+Semarang+,+untuk+informasi+selajutnya+silahkan+masuk+ke+grup + Whatshap+berikut+link+grupnya';
       const whatsappUrl = `https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${message}&type=phone_number&app_absent=0`;
       
+      return res.redirect(whatsappUrl);
+    }
+
+    if (status === 'Rejected') {
+      const phoneNumber = await adminService.getUserPhoneNumber(userId);
+      const message = 'Halo,+kami+dengan+berat+hati+memberitahukan+bahwa+proses+lamaran+magang+Anda+tidak+dapat+kami+terima.+Terima+kasih+telah+mendaftar+dan+tetap +semangat!.';
+      const whatsappUrl = `https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${message}&type=phone_number&app_absent=0`;
+
       return res.redirect(whatsappUrl);
     }
 
@@ -136,6 +152,7 @@ const upload = multer({
 const updateBannerByNameBanner = async (req, res) => {
   upload.single('banner')(req, res, async (err) => {
     if (err) {
+      console.error('Multer error:', err);
       return res.status(500).json({ message: err.message });
     }
 
@@ -143,26 +160,53 @@ const updateBannerByNameBanner = async (req, res) => {
       return res.status(400).json({ message: 'No file uploaded' });
     }
 
-    const bannerFilePath = req.file.path; 
-
-    const nameBanner = 'lowongan'; 
+    const newBannerFilePath = req.file.path;
+    const nameBanner = 'lowongan';
 
     try {
-      const updatedVacancy = await adminService.updateBannerUrlByNameBanner(nameBanner, bannerFilePath);
-      
+      const { updatedVacancy } = await adminService.updateBannerUrlByNameBanner(nameBanner, newBannerFilePath);
+
       if (updatedVacancy.count === 0) {
         return res.status(404).json({ message: `No vacancies found with name_banner = ${nameBanner}` });
       }
 
       return res.status(200).json({ message: 'Banner updated successfully', updatedVacancy });
     } catch (error) {
-      fs.unlink(bannerFilePath, (unlinkError) => {
-        if (unlinkError) console.error('Failed to delete file:', unlinkError);
+      console.error('Error updating banner:', error);
+
+      // Rollback: Remove the newly uploaded file if an error occurs
+      fs.unlink(newBannerFilePath, (unlinkError) => {
+        if (unlinkError) {
+          console.error('Failed to delete new file:', unlinkError);
+        }
       });
 
       return res.status(500).json({ message: error.message });
     }
   });
+};
+
+const getBannerByNameBanner = async (req, res) => {
+  const { nameBanner } = req.query;
+
+  console.log('Received nameBanner:', nameBanner); // Debug log
+
+  if (!nameBanner) {
+    return res.status(400).json({ message: 'nameBanner query parameter is required' });
+  }
+
+  try {
+    const bannerPath = await adminService.getBannerByNameBanner(nameBanner);
+
+    if (!bannerPath) {
+      return res.status(404).json({ message: 'Banner not found' });
+    }
+
+    res.sendFile(path.resolve(bannerPath));  
+  } catch (error) {
+    console.error('Error in getBannerByNameBanner:', error); // Debug log
+    res.status(500).json({ message: 'Error retrieving banner' });
+  }
 };
 
 module.exports = {
@@ -174,4 +218,5 @@ module.exports = {
   updateUserStatus2,
   getApplicantsData,
   updateBannerByNameBanner,
+  getBannerByNameBanner,
 };

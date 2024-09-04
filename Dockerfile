@@ -25,9 +25,6 @@ WORKDIR /app
 # Copy the node_modules and application code from the dependencies stage
 COPY --from=dependencies /app /app
 
-# Tentukan environment variable (jika diperlukan)
-ENV JWT_SECRET_KEY=dukcapilsmg123
-
 # Expose the port the app runs on
 EXPOSE 5000
 
