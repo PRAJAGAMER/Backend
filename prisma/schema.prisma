@@ -23,8 +23,8 @@ enum Role {
 
 model User {
   id         Int         @id @default(autoincrement())
-  name       String      @unique
-  email      String      @unique
+  name       String      
+  email      String      
   password   String
   status     Role        @default(Pending)
   createdAt  DateTime    @default(now())
@@ -93,7 +93,7 @@ model Admin {
   admin_name  String
   nip         String    @unique
   telp_admin  String
-  email       String    @unique
+  email       String    
   password    String
   role        String    @default("admin")
   createdAt   DateTime  @default(now())
