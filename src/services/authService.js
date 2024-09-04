@@ -53,7 +53,9 @@ exports.registerUser = async ({ name, nim, nik, password, email, telp, universit
 };
 
 exports.loginUser = async (email, password) => {
-  const user = await prisma.user.findUnique({ where: { email } });
+  const user = await prisma.user.findFirst({
+    where: { email },
+  });
 
   if (!user) {
     throw new Error('Invalid email or password');
@@ -89,7 +91,9 @@ exports.registerAdmin = async ({ admin_name, nip, telp_admin, email, password })
 };
 
 exports.loginAdmin = async (email, password) => {
-  const admin = await prisma.admin.findUnique({ where: { email } });
+  const admin = await prisma.admin.findFirst({
+    where: { email },
+  });
 
   if (!admin) {
     throw new Error('Invalid email or password');
