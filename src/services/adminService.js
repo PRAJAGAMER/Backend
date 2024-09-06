@@ -72,6 +72,7 @@ const getAllUsers2 = async () => {
     const users = await prisma.user.findMany({
       select: {
         name: true,
+        email: true,
         status: true, 
         Profile: {
           select: {
@@ -124,6 +125,32 @@ const countAllApplicants = async () => {
     return count;
   } catch (error) {
     throw new Error('Error when calculating the number of registrants');
+  }
+};
+
+// Count the number of verifying applicants (Rejected)
+const countVerifyingApplicants = async () => {
+  try {
+    const count = await prisma.user.count({
+      where: { status: Role.Verifying }, 
+    });
+    return count;
+  } catch (error) {
+    console.error('Detail Error:', error.message);
+    throw new Error('Error when calculating the number of verifying applicants');
+  }
+};
+
+// Count the number of not verifying applicants (Rejected)
+const countNotVerifyingApplicants = async () => {
+  try {
+    const count = await prisma.user.count({
+      where: { status: Role.NotVerifying }, 
+    });
+    return count;
+  } catch (error) {
+    console.error('Detail Error:', error.message);
+    throw new Error('Error when calculating the number of verifying applicants');
   }
 };
 
@@ -244,6 +271,8 @@ module.exports = {
   updateUserStatus,
   getUserPhoneNumber,
   countAllApplicants,
+  countVerifyingApplicants,
+  countNotVerifyingApplicants,
   countAcceptedApplicants,
   countRejectedApplicants,
   getApplicantsList,
