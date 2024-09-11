@@ -112,10 +112,10 @@ exports.registerUser = (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { nik, password } = req.body;
 
   try {
-    const { token, user } = await authService.loginUser(email, password);
+    const { token, user } = await authService.loginUser(nik, password);
     res.json({ token, user });
   } catch (error) {
     res.status(401).json({ error: error.message });
@@ -134,12 +134,11 @@ exports.registerAdmin = async (req, res) => {
   }
 };
 
-// Login for admin
 exports.loginAdmin = async (req, res) => {
-  const { email, password } = req.body;
+  const { nip, password } = req.body;
 
   try {
-    const { token, admin } = await authService.loginAdmin(email, password);
+    const { token, admin } = await authService.loginAdmin(nip, password);
     res.json({ token, admin });
   } catch (error) {
     res.status(401).json({ error: error.message });

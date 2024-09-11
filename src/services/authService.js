@@ -52,23 +52,26 @@ exports.registerUser = async ({ name, nim, nik, password, email, telp, universit
   });
 };
 
-exports.loginUser = async (email, password) => {
+exports.loginUser = async (nik, password) => {
   const user = await prisma.user.findFirst({
-    where: { email },
+    where: {
+      Profile: {
+        nik: nik, 
+      }
+    },
+    include: {
+      Profile: true, 
+    }
   });
 
   if (!user) {
-    throw new Error('Invalid email or password');
-  }
-
-  if (user.status !== 'Verifying') {
-    throw new Error('Your account has not been approved by admin.');
+    throw new Error('Invalid NIK or password');
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
-    throw new Error('Invalid email or password');
+    throw new Error('Invalid NIK or password');
   }
 
   const token = jwt.sign({ id: user.id, name: user.name }, JWT_SECRET, { expiresIn: '1h' });
@@ -90,22 +93,22 @@ exports.registerAdmin = async ({ admin_name, nip, telp_admin, email, password })
   });
 };
 
-exports.loginAdmin = async (email, password) => {
+exports.loginAdmin = async (nip, password) => {
   const admin = await prisma.admin.findFirst({
-    where: { email },
+    where: { nip }, 
   });
 
   if (!admin) {
-    throw new Error('Invalid email or password');
+    throw new Error('Invalid NIP or password');
   }
 
   const isMatch = await bcrypt.compare(password, admin.password);
 
   if (!isMatch) {
-    throw new Error('Invalid email or password');
+    throw new Error('Invalid NIP or password');
   }
 
-  const token = jwt.sign({ id: admin.id, name: admin.name }, JWT_SECRET, { expiresIn: '1h' });
+  const token = jwt.sign({ id: admin.id, name: admin.admin_name }, JWT_SECRET, { expiresIn: '1h' });
 
   return { token, admin };
 };
