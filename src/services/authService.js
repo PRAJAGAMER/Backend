@@ -56,16 +56,21 @@ exports.loginUser = async (nik, password) => {
   const user = await prisma.user.findFirst({
     where: {
       Profile: {
-        nik: nik, 
+        nik: nik,
       }
     },
     include: {
-      Profile: true, 
+      Profile: true,
     }
   });
 
   if (!user) {
     throw new Error('Invalid NIK or password');
+  }
+
+  // Cek status pendaftar
+  if (user.Profile.status !== 'verifying') {
+    throw new Error('You cannot log in until your profile is verified by admin');
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
