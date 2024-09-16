@@ -37,10 +37,10 @@ const storage = multer.diskStorage({
     cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); 
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname);
+    cb(null, uniqueSuffix);  // Format nama file
   }
 });
-
 
 const fileFilter = (req, file, cb) => {
   if (file.fieldname === 'cv' || file.fieldname === 'recommend_letter' || file.fieldname === 'portofolio') {
@@ -61,6 +61,12 @@ const upload = multer({
   fileFilter: fileFilter
 });
 
+// Function to get relative path based on fieldname
+const getRelativePath = (filePath, fieldname) => {
+  const basePath = path.join(__dirname, '..', '..', 'src', 'uploads', fieldname);
+  return path.relative(basePath, filePath).replace(/\\/g, '/');
+};
+
 exports.applyForInternship = [
   upload.fields([
     { name: 'recommend_letter', maxCount: 1 },
@@ -77,14 +83,15 @@ exports.applyForInternship = [
     const cvFile = req.files['cv'] ? req.files['cv'][0] : null;
 
     try {
+      // Map file fieldnames to relative paths
       const internship = await internshipService.applyForInternship({
         userId,
         available_space,
         first_period,
         last_period,
-        recommend_letter: recommendLetterFile ? recommendLetterFile.path.replace(/\\/g, '/') : null,
-        portofolio: portofolioFile ? portofolioFile.path.replace(/\\/g, '/') : null,
-        cv: cvFile ? cvFile.path.replace(/\\/g, '/') : null,
+        recommend_letter: recommendLetterFile ? `recommend_letter/${getRelativePath(recommendLetterFile.path, 'recommend_letter')}` : null,
+        portofolio: portofolioFile ? `portofolio/${getRelativePath(portofolioFile.path, 'portofolio')}` : null,
+        cv: cvFile ? `cv/${getRelativePath(cvFile.path, 'cv')}` : null,
       });
 
       res.json({ message: 'Internship application submitted successfully', internship });

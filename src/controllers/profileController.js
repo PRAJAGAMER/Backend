@@ -53,13 +53,16 @@ const getProfile = async (req, res) => {
 //   }
 // };
 
+
+// Multer Initialization
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'src/uploads/photo/');  // Folder tempat menyimpan file gambar
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname);
-    cb(null, file.fieldname + '-' + uniqueSuffix);  // Format nama file
+    const filename = file.fieldname + '-' + uniqueSuffix;  // Format nama file
+    cb(null, filename);
   }
 });
 
@@ -99,7 +102,8 @@ const updateProfile = async (req, res) => {
 
     // Jika ada file yang diunggah, tambahkan path ke profileData
     if (req.file) {
-      profileData.photo = req.file.path;  // Path file yang diunggah
+      const filename = req.file.filename; // Nama file
+      profileData.photo = `photo/${filename}`;  // Path file yang diunggah
     }
 
     try {

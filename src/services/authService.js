@@ -68,9 +68,8 @@ exports.loginUser = async (nik, password) => {
     throw new Error('Invalid NIK or password');
   }
 
-  // Cek status pendaftar
-  if (user.Profile.status !== 'verifying') {
-    throw new Error('You cannot log in until your profile is verified by admin');
+  if (user.status !== 'Verifying') {
+    throw new Error('User status is not Verifying');
   }
 
   const isMatch = await bcrypt.compare(password, user.password);

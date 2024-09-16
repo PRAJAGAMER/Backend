@@ -62,6 +62,13 @@ const uploadFields = upload.fields([
   { name: 'score_list', maxCount: 1 },
 ]);
 
+// Function to get relative path
+const getRelativePath = (filePath) => {
+  // Assumes that the path is starting from the root of the project directory
+  const basePath = path.join(__dirname, '..', '..', 'src', 'uploads');
+  return path.relative(basePath, filePath);
+};
+
 // Controller for user registration
 exports.registerUser = (req, res) => {
   uploadFields(req, res, async (err) => {
@@ -96,9 +103,10 @@ exports.registerUser = (req, res) => {
     try {
       const { name, nim, nik, password, email, telp, universitas, major } = req.body;
 
-      const photoPath = photoFile.path;
-      const cvPath = cvFile.path;
-      const scoreListPath = scoreListFile.path;
+      // Get relative paths
+      const photoPath = photoFile ? getRelativePath(photoFile.path) : null;
+      const cvPath = cvFile ? getRelativePath(cvFile.path) : null;
+      const scoreListPath = scoreListFile ? getRelativePath(scoreListFile.path) : null;
 
       const user = await authService.registerUser({
         name, nim, nik, password, email, telp, universitas, major, photoPath, cvPath, scoreListPath

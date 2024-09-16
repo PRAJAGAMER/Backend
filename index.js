@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path'); // Tambahkan
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -17,6 +18,8 @@ const corsOptions = {
 app.use(express.json()); // Parse JSON bodies
 
 // Routes
+// **Tambahkan ini untuk melayani file statis**
+app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
 app.use(cors(corsOptions));
 app.use('/api', authRoutes);
 app.use('/api', profileRoutes);
