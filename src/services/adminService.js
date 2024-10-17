@@ -17,9 +17,50 @@ const deleteAdmin = async (id) => {
   });
 };
 
+// const getAllUsers = async () => {
+//   try {
+//     const users = await prisma.user.findMany({
+//       select: {
+//         name: true,
+//         email: true,
+//         status: true,
+//         createdAt: true,
+//         Profile: {
+//           select: {
+//             telp_user: true,
+//             nik: true,
+//             photo: true, 
+//           },
+//         },
+//         Regist: {
+//           select: {
+//             cv: true, 
+//             score_list: true, 
+//           },
+//         },
+//         University: {
+//           select: {
+//             univ_name: true,
+//             major: true,
+//             nim: true,
+//           },
+//         },
+//       },
+//     });
+//     return users;
+//   } catch (error) {
+//     throw new Error('Error retrieving all user data');
+//   }
+// };
+
 const getAllUsers = async () => {
   try {
     const users = await prisma.user.findMany({
+      where: {
+        status: {
+          in: ['Pending', 'Verifying', 'NotVerifying'],
+        },
+      },
       select: {
         name: true,
         email: true,
@@ -67,13 +108,57 @@ const updateUserStatus = async (userId, status) => {
   }
 };
 
+// const getAllUsers2 = async () => {
+//   try {
+//     const users = await prisma.user.findMany({
+//       select: {
+//         name: true,
+//         email: true,
+//         status: true, 
+//         Profile: {
+//           select: {
+//             telp_user: true,
+//             nik: true,
+//           },
+//         },
+//         University: {
+//           select: {
+//             univ_name: true,
+//             major: true,
+//             nim: true,
+//           },
+//         },
+//         Regist: {
+//           select: {
+//             cv: true,
+//             portofolio: true,
+//             recommend_letter: true, 
+//             available_space: true,
+//             first_period: true,
+//             last_period: true,
+//             updateAt: true,  
+//           },
+//         },
+//       },
+//     });
+//     return users;
+//   } catch (error) {
+//     throw new Error('Error retrieving all user datar');
+//   }
+// };
+
 const getAllUsers2 = async () => {
   try {
     const users = await prisma.user.findMany({
+      where: {
+        status: {
+          in: ['Verifying', 'Accepted', 'Rejected'],
+        },
+      },
       select: {
         name: true,
         email: true,
-        status: true, 
+        status: true,
         Profile: {
           select: {
             telp_user: true,
@@ -102,7 +187,7 @@ const getAllUsers2 = async () => {
     });
     return users;
   } catch (error) {
-    throw new Error('Error retrieving all user datar');
+    throw new Error('Error retrieving all user data');
   }
 };
 
@@ -263,6 +348,21 @@ const getBannerByNameBanner = async (nameBanner) => {
   }
 };
 
+const getUserById = async (userId) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        status: true, // mengambil status untuk pengecekan
+      },
+    });
+    return user;
+  } catch (error) {
+    throw new Error('Error retrieving user by ID');
+  }
+};
+
 module.exports = {
   getAllAdmins,
   deleteAdmin,
@@ -278,4 +378,5 @@ module.exports = {
   getApplicantsList,
   updateBannerUrlByNameBanner,
   getBannerByNameBanner,
+  getUserById,
 };

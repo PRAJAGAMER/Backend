@@ -46,10 +46,144 @@ const getAllUsers2 = async (req, res) => {
 };
 
 // Handler to update user status [verifying]
+// const updateUserStatus = async (req, res) => {
+//   const { userId, status } = req.body;
+
+//   try {
+//     const updatedUser = await adminService.updateUserStatus(userId, status);
+
+//     if (status === 'Verifying') {
+//       const phoneNumber = await adminService.getUserPhoneNumber(userId);
+//       const message = 'Selamat+Pendaftaran+akun+kamu+diterima+silahkan+login+dan+lakukan+pendaftaran+magang';
+//       const whatsappUrl = `https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${message}&type=phone_number&app_absent=0`;
+      
+//       return res.redirect(whatsappUrl);
+//     } 
+
+//     if (status === 'NotVerifying') {
+//       const phoneNumber = await adminService.getUserPhoneNumber(userId);
+//       const message = 'Maaf+Pendaftaran+akun+anda+tidak+dapat+diverifikasi+untuk+magang';
+//       const whatsappUrl = `https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${message}&type=phone_number&app_absent=0`;
+      
+//       return res.redirect(whatsappUrl);
+//     }
+
+//     res.status(200).json(updatedUser);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
+// // Handler to update user status [Accepted]
+// const updateUserStatus2 = async (req, res) => {
+//   const { userId, status } = req.body;
+
+//   try {
+//     const updatedUser = await adminService.updateUserStatus(userId, status);
+
+//     if (status === 'Accepted') {
+//       const phoneNumber = await adminService.getUserPhoneNumber(userId);
+//       const message = 'Halo+setelah+melalui+proses+seleksi+administrasi+kamu+diterima+magang+di+DISDUKCAPIL+Kota+Semarang+,+untuk+informasi+selajutnya+silahkan+masuk+ke+grup + Whatshap+berikut+link+grupnya';
+//       const whatsappUrl = `https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${message}&type=phone_number&app_absent=0`;
+      
+//       return res.redirect(whatsappUrl);
+//     }
+
+//     if (status === 'Rejected') {
+//       const phoneNumber = await adminService.getUserPhoneNumber(userId);
+//       const message = 'Halo,+kami+dengan+berat+hati+memberitahukan+bahwa+proses+lamaran+magang+Anda+tidak+dapat+kami+terima.+Terima+kasih+telah+mendaftar+dan+tetap +semangat!.';
+//       const whatsappUrl = `https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${message}&type=phone_number&app_absent=0`;
+
+//       return res.redirect(whatsappUrl);
+//     }
+
+//     res.status(200).json(updatedUser);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
+// const updateUserStatus = async (req, res) => {
+//   const { userId, status } = req.body;
+
+//   // Validasi status yang diperbolehkan
+//   if (!['Verifying', 'NotVerifying'].includes(status)) {
+//     return res.status(400).json({ error: 'Status yang diberikan tidak valid. Hanya dapat mengubah ke Verifying atau NotVerifying.' });
+//   }
+
+//   try {
+//     const updatedUser = await adminService.updateUserStatus(userId, status);
+
+//     if (status === 'Verifying') {
+//       const phoneNumber = await adminService.getUserPhoneNumber(userId);
+//       const message = 'Selamat+Pendaftaran+akun+kamu+diterima+silahkan+login+dan+lakukan+pendaftaran+magang';
+//       const whatsappUrl = `https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${message}&type=phone_number&app_absent=0`;
+      
+//       return res.redirect(whatsappUrl);
+//     } 
+
+//     if (status === 'NotVerifying') {
+//       const phoneNumber = await adminService.getUserPhoneNumber(userId);
+//       const message = 'Maaf+Pendaftaran+akun+anda+tidak+dapat+diverifikasi+untuk+magang';
+//       const whatsappUrl = `https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${message}&type=phone_number&app_absent=0`;
+      
+//       return res.redirect(whatsappUrl);
+//     }
+
+//     res.status(200).json(updatedUser);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
+// const updateUserStatus2 = async (req, res) => {
+//   const { userId, status } = req.body;
+
+//   // Validasi status yang diperbolehkan
+//   if (!['Accepted', 'Rejected'].includes(status)) {
+//     return res.status(400).json({ error: 'Status yang diberikan tidak valid. Hanya dapat mengubah ke Accepted atau Rejected.' });
+//   }
+
+//   try {
+//     const updatedUser = await adminService.updateUserStatus(userId, status);
+
+//     if (status === 'Accepted') {
+//       const phoneNumber = await adminService.getUserPhoneNumber(userId);
+//       const message = 'Halo+setelah+melalui+proses+seleksi+administrasi+kamu+diterima+magang+di+DISDUKCAPIL+Kota+Semarang+,+untuk+informasi+selajutnya+silahkan+masuk+ke+grup+WhatsApp+berikut+link+grupnya';
+//       const whatsappUrl = `https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${message}&type=phone_number&app_absent=0`;
+      
+//       return res.redirect(whatsappUrl);
+//     }
+
+//     if (status === 'Rejected') {
+//       const phoneNumber = await adminService.getUserPhoneNumber(userId);
+//       const message = 'Halo,+kami+dengan+berat+hati+memberitahukan+bahwa+proses+lamaran+magang+Anda+tidak+dapat+kami+terima.+Terima+kasih+telah+mendaftar+dan+tetap+semangat!';
+//       const whatsappUrl = `https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${message}&type=phone_number&app_absent=0`;
+
+//       return res.redirect(whatsappUrl);
+//     }
+
+//     res.status(200).json(updatedUser);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
 const updateUserStatus = async (req, res) => {
   const { userId, status } = req.body;
 
+  // Validasi status yang diperbolehkan
+  if (!['Verifying', 'NotVerifying'].includes(status)) {
+    return res.status(400).json({ error: 'Status yang diberikan tidak valid. Hanya dapat mengubah ke Verifying atau NotVerifying.' });
+  }
+
   try {
+    // Cek status awal user
+    const user = await adminService.getUserById(userId);
+    if (!user || user.status !== 'Pending') {
+      return res.status(400).json({ error: 'Status awal harus Pending untuk dapat diubah ke Verifying atau NotVerifying.' });
+    }
+
     const updatedUser = await adminService.updateUserStatus(userId, status);
 
     if (status === 'Verifying') {
@@ -74,16 +208,26 @@ const updateUserStatus = async (req, res) => {
   }
 };
 
-// Handler to update user status [Accepted]
 const updateUserStatus2 = async (req, res) => {
   const { userId, status } = req.body;
 
+  // Validasi status yang diperbolehkan
+  if (!['Accepted', 'Rejected'].includes(status)) {
+    return res.status(400).json({ error: 'Status yang diberikan tidak valid. Hanya dapat mengubah ke Accepted atau Rejected.' });
+  }
+
   try {
+    // Cek status awal user
+    const user = await adminService.getUserById(userId);
+    if (!user || user.status !== 'Verifying') {
+      return res.status(400).json({ error: 'Status awal harus Verifying untuk dapat diubah ke Accepted atau Rejected.' });
+    }
+
     const updatedUser = await adminService.updateUserStatus(userId, status);
 
     if (status === 'Accepted') {
       const phoneNumber = await adminService.getUserPhoneNumber(userId);
-      const message = 'Halo+setelah+melalui+proses+seleksi+administrasi+kamu+diterima+magang+di+DISDUKCAPIL+Kota+Semarang+,+untuk+informasi+selajutnya+silahkan+masuk+ke+grup + Whatshap+berikut+link+grupnya';
+      const message = 'Halo+setelah+melalui+proses+seleksi+administrasi+kamu+diterima+magang+di+DISDUKCAPIL+Kota+Semarang+,+untuk+informasi+selajutnya+silahkan+masuk+ke+grup+WhatsApp+berikut+link+grupnya';
       const whatsappUrl = `https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${message}&type=phone_number&app_absent=0`;
       
       return res.redirect(whatsappUrl);
@@ -91,7 +235,7 @@ const updateUserStatus2 = async (req, res) => {
 
     if (status === 'Rejected') {
       const phoneNumber = await adminService.getUserPhoneNumber(userId);
-      const message = 'Halo,+kami+dengan+berat+hati+memberitahukan+bahwa+proses+lamaran+magang+Anda+tidak+dapat+kami+terima.+Terima+kasih+telah+mendaftar+dan+tetap +semangat!.';
+      const message = 'Halo,+kami+dengan+berat+hati+memberitahukan+bahwa+proses+lamaran+magang+Anda+tidak+dapat+kami+terima.+Terima+kasih+telah+mendaftar+dan+tetap+semangat!';
       const whatsappUrl = `https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${message}&type=phone_number&app_absent=0`;
 
       return res.redirect(whatsappUrl);

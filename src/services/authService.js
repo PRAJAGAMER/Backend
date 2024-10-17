@@ -68,8 +68,8 @@ exports.loginUser = async (nik, password) => {
     throw new Error('Invalid NIK or password');
   }
 
-  if (user.status !== 'Verifying') {
-    throw new Error('User status is not Verifying');
+  if (user.status !== 'Verifying' && user.status !== 'Accepted') {
+    throw new Error('User status is not Verifying or Accepted');
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
