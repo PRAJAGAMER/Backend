@@ -253,7 +253,7 @@ const getApplicantsData = async (req, res) => {
     const [totalApplicants, verifyingApplicants, notVerifyingApplicants, acceptedApplicants, rejectedApplicants, applicantsList] = await Promise.all([
       adminService.countAllApplicants(),
       adminService.countVerifyingApplicants(),
-      adminService.countNotVerifyingApplicants(),
+      // adminService.countNotVerifyingApplicants(),
       adminService.countAcceptedApplicants(),
       adminService.countRejectedApplicants(),
       adminService.getApplicantsList()
