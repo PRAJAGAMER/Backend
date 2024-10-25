@@ -250,7 +250,7 @@ const updateUserStatus2 = async (req, res) => {
 // Get the total number of applicants, accepted applicants, and rejected applicants, and retrieve all applicant data
 const getApplicantsData = async (req, res) => {
   try {
-    const [totalApplicants, verifyingApplicants, notVerifyingApplicants, acceptedApplicants, rejectedApplicants, applicantsList] = await Promise.all([
+    const [totalApplicants, verifyingApplicants, acceptedApplicants, rejectedApplicants, applicantsList] = await Promise.all([
       adminService.countAllApplicants(),
       adminService.countVerifyingApplicants(),
       // adminService.countNotVerifyingApplicants(),
@@ -262,7 +262,6 @@ const getApplicantsData = async (req, res) => {
     res.status(200).json({ 
       totalApplicants,
       verifyingApplicants,
-      notVerifyingApplicants,
       acceptedApplicants,
       rejectedApplicants,
       applicantsList
