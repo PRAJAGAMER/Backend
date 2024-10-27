@@ -321,6 +321,11 @@ const getApplicantsList = async () => {
               univ_name: true,
             },
           },
+          Profile: { 
+            select: {
+              telp_user: true,
+            },
+          },
         },
       },
     },
