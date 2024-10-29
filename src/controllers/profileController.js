@@ -40,28 +40,14 @@ const getProfile = async (req, res) => {
   }
 };
 
-// const updateProfile = async (req, res) => {
-//   const userId = req.user.id;  // Get userId from JWT
-//   const profileData = req.body;  // Retrieve all data from the request body
-
-//   try {
-//     const result = await profileService.updateProfile(userId, profileData);
-//     res.json({ message: 'Profile updated successfully', result });
-//   } catch (error) {
-//     console.error('Error updating profile:', error);
-//     res.status(500).json({ error: 'Internal server error', details: error.message });
-//   }
-// };
-
-
 // Multer Initialization
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'src/uploads/photo/');  // Folder tempat menyimpan file gambar
+    cb(null, 'src/uploads/photo/');  
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname);
-    const filename = file.fieldname + '-' + uniqueSuffix;  // Format nama file
+    const filename = file.fieldname + '-' + uniqueSuffix;  
     cb(null, filename);
   }
 });
@@ -82,32 +68,28 @@ const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024 // Membatasi ukuran file maksimal 5MB
+    fileSize: 5 * 1024 * 1024 
   }
-}).single('photo');  // Hanya satu file, yaitu photo
+}).single('photo');  
 
 const updateProfile = async (req, res) => {
-  // Gunakan multer untuk menangani upload file
   upload(req, res, async (err) => {
     if (err) {
-      // Cek jenis error
       if (err.code === 'LIMIT_FILE_SIZE') {
         return res.status(400).json({ error: 'File size exceeds 5MB limit!' });
       }
       return res.status(400).json({ error: err.message });
     }
 
-    const userId = req.user.id;  // Ambil userId dari JWT
-    const profileData = req.body;  // Ambil data lain dari body request
+    const userId = req.user.id;  
+    const profileData = req.body;  
 
-    // Jika ada file yang diunggah, tambahkan path ke profileData
     if (req.file) {
-      const filename = req.file.filename; // Nama file
-      profileData.photo = `photo/${filename}`;  // Path file yang diunggah
+      const filename = req.file.filename; 
+      profileData.photo = `photo/${filename}`;  
     }
 
     try {
-      // Panggil service untuk memperbarui profile
       const result = await profileService.updateProfile(userId, profileData);
       res.json({ message: 'Profile updated successfully', result });
     } catch (error) {
