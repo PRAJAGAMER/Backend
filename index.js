@@ -11,7 +11,7 @@ const exportRoute = require('./src/routes/exportRoute');
 const cors = require('cors');
 const corsOptions = {
   credential: true,
-  origin: ['http://localhost:5173']
+  origin: ['http://localhost:5173', 'https://prajagemer.vercel.app']
 }
 
 // Middleware

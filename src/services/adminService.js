@@ -17,42 +17,6 @@ const deleteAdmin = async (id) => {
   });
 };
 
-// const getAllUsers = async () => {
-//   try {
-//     const users = await prisma.user.findMany({
-//       select: {
-//         name: true,
-//         email: true,
-//         status: true,
-//         createdAt: true,
-//         Profile: {
-//           select: {
-//             telp_user: true,
-//             nik: true,
-//             photo: true, 
-//           },
-//         },
-//         Regist: {
-//           select: {
-//             cv: true, 
-//             score_list: true, 
-//           },
-//         },
-//         University: {
-//           select: {
-//             univ_name: true,
-//             major: true,
-//             nim: true,
-//           },
-//         },
-//       },
-//     });
-//     return users;
-//   } catch (error) {
-//     throw new Error('Error retrieving all user data');
-//   }
-// };
-
 const getAllUsers = async () => {
   try {
     const users = await prisma.user.findMany({
@@ -100,53 +64,14 @@ const updateUserStatus = async (userId, status) => {
   try {
     const updatedUser = await prisma.user.update({
       where: { id: userId },
-      data: { status: status }, // pastikan `status` sesuai dengan enum
+      data: { status: status }, 
     });
     return updatedUser;
   } catch (error) {
-    console.error('Error in updateUserStatus:', error); // Tambahkan log untuk debugging
+    console.error('Error in updateUserStatus:', error); 
     throw new Error('Error when changing user status');
   }
 };
-
-// const getAllUsers2 = async () => {
-//   try {
-//     const users = await prisma.user.findMany({
-//       select: {
-//         name: true,
-//         email: true,
-//         status: true, 
-//         Profile: {
-//           select: {
-//             telp_user: true,
-//             nik: true,
-//           },
-//         },
-//         University: {
-//           select: {
-//             univ_name: true,
-//             major: true,
-//             nim: true,
-//           },
-//         },
-//         Regist: {
-//           select: {
-//             cv: true,
-//             portofolio: true,
-//             recommend_letter: true, 
-//             available_space: true,
-//             first_period: true,
-//             last_period: true,
-//             updateAt: true,  
-//           },
-//         },
-//       },
-//     });
-//     return users;
-//   } catch (error) {
-//     throw new Error('Error retrieving all user datar');
-//   }
-// };
 
 const getAllUsers2 = async () => {
   try {
@@ -205,16 +130,6 @@ const getUserPhoneNumber = async (userId) => {
   }
 };
 
-// Count the total number of registrants
-// const countAllApplicants = async () => {
-//   try {
-//     const count = await prisma.user.count();
-//     return count;
-//   } catch (error) {
-//     throw new Error('Error when calculating the number of registrants');
-//   }
-// };
-
 const countAllApplicants = async () => {
   try {
     const count = await prisma.user.count({
@@ -243,19 +158,6 @@ const countVerifyingApplicants = async () => {
   }
 };
 
-// Count the number of not verifying applicants (Rejected)
-// const countNotVerifyingApplicants = async () => {
-//   try {
-//     const count = await prisma.user.count({
-//       where: { status: Role.NotVerifying }, 
-//     });
-//     return count;
-//   } catch (error) {
-//     console.error('Detail Error:', error.message);
-//     throw new Error('Error when calculating the number of verifying applicants');
-//   }
-// };
-
 // Count the number of accepted applicants (Accepted)
 const countAcceptedApplicants = async () => {
   try {
@@ -282,31 +184,12 @@ const countRejectedApplicants = async () => {
   }
 };
 
-// const getApplicantsList = async () => {
-//   return await prisma.regist.findMany({
-//     include: {
-//       user: {
-//         select: {
-//           name: true,          
-//           status: true,        
-//           createdAt: true,     
-//           University: {
-//             select: {
-//               univ_name: true, 
-//             }
-//           }
-//         }
-//       }
-//     }
-//   });
-// };
-
 const getApplicantsList = async () => {
   return await prisma.regist.findMany({
     where: {
       user: {
         status: {
-          in: ['Verifying', 'Accepted', 'Rejected'], // Tambahkan kondisi ini
+          in: ['Verifying', 'Accepted', 'Rejected'], 
         },
       },
     },
@@ -319,6 +202,11 @@ const getApplicantsList = async () => {
           University: {
             select: {
               univ_name: true,
+            },
+          },
+          Profile: { 
+            select: {
+              telp_user: true,
             },
           },
         },
@@ -397,7 +285,7 @@ const getUserById = async (userId) => {
       where: { id: userId },
       select: {
         id: true,
-        status: true, // mengambil status untuk pengecekan
+        status: true, 
       },
     });
     return user;
@@ -415,7 +303,6 @@ module.exports = {
   getUserPhoneNumber,
   countAllApplicants,
   countVerifyingApplicants,
-  // countNotVerifyingApplicants,
   countAcceptedApplicants,
   countRejectedApplicants,
   getApplicantsList,
